@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ứng dụng học học từ vựng Ngoại Ngữ</title>
+    <!-- SweetAlert2 CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background-color: #f3f4f6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background-color: white;
+            padding: 15px 30px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .nav-menu {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .nav-menu a {
+            text-decoration: none;
+            color: #333;
+            font-size: 16px;
+        }
+
+        .nav-menu a:hover {
+            color: #2d89ef;
+        }
+
+        .nav-buttons .btn {
+            margin-left: 10px;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            color: white;
+            font-weight: bold;
+        }
+
+        .btn-login {
+            background-color: #2d89ef;
+        }
+
+        .btn-register {
+            background-color: #28a745;
+        }
+
+        .btn-logout {
+            background-color: #dc3545;
+        }
+
+        main {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
+        }
+
+        .form-box {
+            background-color: white;
+            padding: 30px 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .form-box h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .form-box form label {
+            display: block;
+            margin-bottom: 5px;
+            margin-top: 10px;
+        }
+
+        .form-box input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .btn-submit {
+            width: 100%;
+            color: white;
+            padding: 10px;
+            margin-top: 10px;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .btn-submit.blue {
+            background-color: #2d89ef;
+        }
+
+        .btn-submit.green {
+            background-color: #28a745;
+        }
+
+        #home-page {
+            text-align: center;
+            padding: 40px;
+        }
+
+        #home-page h1 {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        #home-page p {
+            margin: 20px 0;
+            font-size: 16px;
+            color: #666;
+        }
+
+        #home-page button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 0 10px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 15px;
+            font-size: 14px;
+            color: #1e40af;
+        }
+
+        .error-msg {
+            color: red;
+            font-size: 13px;
+            margin-bottom: 8px;
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="nav-container">
+            <div class="nav-left">
+                <div class="logo">VocabApp</div>
+                <div class="nav-menu">
+                    <a href="#">Dashboard</a>
+                    <a href="#">Category</a>
+                    <a href="#">Vocabulary</a>
+                    <a href="#">Flashcards</a>
+                    <a href="#">Quiz</a>
+                </div>
+            </div>
+            <div class="nav-buttons">
+                <button class="btn btn-login" onclick="showForm('login')">Login</button>
+                <button class="btn btn-register" onclick="showForm('register')">Register</button>
+                <button class="btn btn-logout" onclick="logout()" style="display: none;">Logout</button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!--login Form -->
+        <div class="form-box" id="login-form">
+            <h2>Login</h2>
+            <form onsubmit="return validateLoginForm()">
+                <label>Email</label>
+                <input type="email" placeholder="Email" required />
+                <label>Password</label>
+                <input type="password" placeholder="Password" required />
+                <button class="btn btn-submit blue" type="submit">Login</button>
+            </form>
+        </div>
+
+        <!--register Form -->
+        <div class="form-box" id="register-form" style="display: none;">
+            <h2>Register</h2>
+            <form onsubmit="return validateRegisterForm()">
+                <label>First Name</label>
+                <input type="text" id="firstName" placeholder="First Name" />
+                <span id="errorFirstName" class="error-msg"></span>
+
+                <label>Last Name</label>
+                <input type="text" id="lastName" placeholder="Last Name" />
+                <span id="errorLastName" class="error-msg"></span>
+
+                <label>Email</label>
+                <input type="email" id="email" placeholder="Email" />
+                <span id="errorEmail" class="error-msg"></span>
+
+                <label>Password</label>
+                <input type="password" id="password" placeholder="Password" />
+                <span id="errorPassword" class="error-msg"></span>
+
+                <label>Confirm Password</label>
+                <input type="password" id="confirmPassword" placeholder="Confirm Password" />
+                <span id="errorConfirmPassword" class="error-msg"></span>
+
+                <button class="btn btn-submit green" type="submit">Register</button>
+            </form>
+        </div>
+
+        <!--home Page after login -->
+        <div id="home-page" style="display: none;">
+            <h1>Welcome to VocabApp</h1>
+            <p>Learn and practice vocabulary with flashcards and quizzes</p>
+            <button style="background-color: #2d89ef; color: white;">Get started</button>
+            <button style="background-color: #28a745; color: white;">Create Account</button>
+        </div>
+    </main>
+
+    <footer>
+        <p>© 2024 VocabApp. All rights reserved. Powered by AI.</p>
+    </footer>
+
+    <script>
+        // Check login state on page load
+        window.onload = function () {
+            const loggedInUser = localStorage.getItem("loggedInUser");
+            if (loggedInUser) {
+                showForm('home');
+            } else {
+                showForm('login');
+            }
+        };
+
+        function validateRegisterForm() {
+            const firstName = document.getElementById("firstName").value.trim();
+            const lastName = document.getElementById("lastName").value.trim();
+            const email = document.getElementById("email").value.trim();
+            const password = document.getElementById("password").value;
+            const confirmPassword = document.getElementById("confirmPassword").value;
+
+            document.querySelectorAll('.error-msg').forEach(e => e.textContent = '');
+
+            let isValid = true;
+
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+
+            if (!firstName) {
+                document.getElementById("errorFirstName").textContent = "Không được để trống First Name";
+                isValid = false;
+            }
+
+            if (!lastName) {
+                document.getElementById("errorLastName").textContent = "Không được để trống Last Name";
+                isValid = false;
+            }
+
+            if (!emailRegex.test(email)) {
+                document.getElementById("errorEmail").textContent = "Email không đúng định dạng";
+                isValid = false;
+            } else {
+                const users = JSON.parse(localStorage.getItem("users")) || [];
+                if (users.some(user => user.email === email)) {
+                    document.getElementById("errorEmail").textContent = "Email đã tồn tại";
+                    isValid = false;
+                }
+            }
+
+            if (!passwordRegex.test(password)) {
+                document.getElementById("errorPassword").textContent =
+                    "Mật khẩu phải tối thiểu 8 ký tự, gồm chữ hoa, chữ thường và số";
+                isValid = false;
+            }
+
+            if (confirmPassword !== password) {
+                document.getElementById("errorConfirmPassword").textContent = "Xác nhận mật khẩu không khớp";
+                isValid = false;
+            }
+
+            if (!isValid) return false;
+
+            const users = JSON.parse(localStorage.getItem("users")) || [];
+            users.push({ firstName, lastName, email, password });
+            localStorage.setItem("users", JSON.stringify(users));
+
+            Swal.fire({
+                title: 'Thành công!',
+                text: 'Đăng ký thành công! Bạn có muốn chuyển sang trang đăng nhập?',
+                icon: 'success',
+                showCancelButton: true,
+                confirmButtonText: 'Có',
+                cancelButtonText: 'Không'
+            }).then((result) => {
+                document.querySelector("#register-form form").reset();
+                if (result.isConfirmed) {
+                    showForm('login');
+                }
+            });
+
+            return false;
+        }
+
+        function showForm(type) {
+            document.getElementById("login-form").style.display = type === 'login' ? 'block' : 'none';
+            document.getElementById("register-form").style.display = type === 'register' ? 'block' : 'none';
+            document.getElementById("home-page").style.display = type === 'home' ? 'block' : 'none';
+            document.querySelector(".btn-login").style.display = type === 'login' || type === 'register' ? 'inline-block' : 'none';
+            document.querySelector(".btn-register").style.display = type === 'login' || type === 'register' ? 'inline-block' : 'none';
+            document.querySelector(".btn-logout").style.display = type === 'home' ? 'inline-block' : 'none';
+        }
+
+        function validateLoginForm() {
+            const emailInput = document.querySelector("#login-form input[type='email']").value.trim();
+            const passwordInput = document.querySelector("#login-form input[type='password']").value;
+
+            const users = JSON.parse(localStorage.getItem("users")) || [];
+
+            const user = users.find(user => user.email === emailInput && user.password === passwordInput);
+
+            if (!user) {
+                Swal.fire({
+                    title: 'Lỗi!',
+                    text: 'Email hoặc mật khẩu không đúng. Vui lòng thử lại.',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+                return false;
+            }
+
+            // Store logged-in user in localStorage
+            localStorage.setItem("loggedInUser", emailInput);
+
+            Swal.fire({
+                title: 'Thành công!',
+                text: 'Đăng nhập thành công!',
+                icon: 'success',
+                confirmButtonText: 'OK'
+            }).then(() => {
+                document.getElementById("login-form").style.display = "none";
+                document.getElementById("register-form").style.display = "none";
+                document.getElementById("home-page").style.display = "block";
+
+                document.querySelector(".btn-login").style.display = "none";
+                document.querySelector(".btn-register").style.display = "none";
+                document.querySelector(".btn-logout").style.display = "inline-block";
+            });
+
+            return false;
+        }
+
+        function logout() {
+            Swal.fire({
+                title: 'Xác nhận',
+                text: 'Bạn có chắc chắn muốn đăng xuất?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Có',
+                cancelButtonText: 'Không'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Clear logged-in user from localStorage
+                    localStorage.removeItem("loggedInUser");
+                    document.getElementById("home-page").style.display = "none";
+                    document.getElementById("login-form").style.display = "block";
+                    document.getElementById("register-form").style.display = "none";
+                    document.querySelector(".btn-login").style.display = "inline-block";
+                    document.querySelector(".btn-register").style.display = "inline-block";
+                    document.querySelector(".btn-logout").style.display = "none";
+
+                    Swal.fire({
+                        title: 'Thành công!',
+                        text: 'Bạn đã đăng xuất thành công.',
+                        icon: 'success',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>
