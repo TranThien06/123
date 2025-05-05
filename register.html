@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Đăng ký - VocabApp</title>
+    <!-- SweetAlert2 CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Link to external CSS -->
+    <link rel="stylesheet" href="css/style.css" />
+</head>
+
+<body>
+    <header>
+        <div class="nav-container">
+            <div class="nav-left">
+                <div class="logo">VocabApp</div>
+                <div class="nav-menu">
+                    <a href="#" data-page="dashboard">Dashboard</a>
+                    <a href="#" data-page="category">Category</a>
+                    <a href="#" data-page="vocabulary">Vocabulary</a>
+                    <a href="#" data-page="flashcards">Flashcards</a>
+                    <a href="#" data-page="quiz">Quiz</a>
+                </div>
+            </div>
+            <div class="nav-buttons">
+                <button class="btn btn-login" onclick="window.location.href='index.html'">Login</button>
+                <button class="btn btn-register" onclick="window.location.href='register.html'">Register</button>
+                <button class="btn btn-logout" onclick="logout()" style="display: none;">Logout</button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- Register Form -->
+        <div class="form-box" id="register-form">
+            <h2>Đăng ký</h2>
+            <form onsubmit="return validateRegisterForm()">
+                <label>Tên</label>
+                <input type="text" id="firstName" placeholder="Nhập tên của bạn" required />
+                <span id="errorFirstName" class="error-msg"></span>
+                <label>Họ</label>
+                <input type="text" id="lastName" placeholder="Nhập họ của bạn" required />
+                <span id="errorLastName" class="error-msg"></span>
+                <label>Email</label>
+                <input type="email" id="email" placeholder="Nhập email của bạn" required />
+                <span id="errorEmail" class="error-msg"></span>
+                <label>Mật khẩu</label>
+                <input type="password" id="password" placeholder="Nhập mật khẩu của bạn" required />
+                <span id="errorPassword" class="error-msg"></span>
+                <label>Xác nhận mật khẩu</label>
+                <input type="password" id="confirmPassword" placeholder="Xác nhận mật khẩu của bạn" required />
+                <span id="errorConfirmPassword" class="error-msg"></span>
+                <button class="btn btn-submit green" type="submit">Đăng ký</button>
+            </form>
+        </div>
+    </main>
+
+    <footer>
+        <p>© 2024 VocabApp. All rights reserved. Powered by AI.</p>
+    </footer>
+
+    <!-- Link to external JS -->
+    <script src="js/auth.js"></script>
+</body>
+
+</html>

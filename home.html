@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ứng dụng học từ vựng ngoại ngữ</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="css/style.css" />
+</head>
+
+<body>
+    <header>
+        <div class="nav-container">
+            <div class="nav-left">
+                <div class="logo">VocabApp</div>
+                <div class="nav-menu">
+                    <a href="#" data-page="dashboard">Dashboard</a>
+                    <a href="#" data-page="category">Category</a>
+                    <a href="#" data-page="vocabulary">Vocabulary</a>
+                    <a href="#" data-page="flashcards">Flashcards</a>
+                    <a href="#" data-page="quiz">Quiz</a>
+                </div>
+            </div>
+            <div class="nav-buttons">
+                <button class="btn btn-login" onclick="window.location.href='index.html'">Login</button>
+                <button class="btn btn-register" onclick="window.location.href='register.html'">Register</button>
+                <button class="btn btn-logout" onclick="logout()" style="display: none;">Logout</button>
+            </div>
+        </div>
+    </header>
+    <main>
+        <div id="home-page" style="display: none;">
+            <h1>Welcome to VocabApp</h1>
+            <p>Learn and practice vocabulary with flashcards and quizzes</p>
+            <button onclick="showPage('category')" class="btn btn-get-started">Get Started</button>
+            <button onclick="showPage('vocabulary')" class="btn btn-explore">Explore More</button>
+        </div>
+        <div id="category-page" style="display: none;">
+            <h2>Danh Sách Danh Mục</h2>
+            <div class="management-header">
+                <div class="search-container">
+                    <input type="text" id="searchCategory" placeholder="Tìm kiếm danh mục..." class="search-input"
+                        oninput="renderCategories()" />
+                </div>
+                <button onclick="openAddCategoryPopup()" class="btn btn-add">Thêm Danh Mục</button>
+            </div>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Tên Danh Mục</th>
+                        <th>Mô Tả</th>
+                        <th>Hành Động</th>
+                    </tr>
+                </thead>
+                <tbody id="categoryTableBody"></tbody>
+            </table>
+            <div id="categoryPagination" class="pagination"></div>
+        </div>
+        <div id="vocabulary-page" style="display: none;">
+            <h2>Danh Sách Từ Vựng</h2>
+            <div class="management-header">
+                <div class="search-container">
+                    <input type="text" id="searchVocabulary" placeholder="Tìm kiếm từ vựng..." class="search-input"
+                        oninput="renderVocabularies()" />
+                </div>
+                <button onclick="openAddVocabularyPopup()" class="btn btn-add">Thêm Từ Vựng</button>
+            </div>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Từ</th>
+                        <th>Nghĩa</th>
+                        <th>Chủ đề</th>
+                        <th>Hành động</th>
+                    </tr>
+                </thead>
+                <tbody id="vocabularyTableBody"></tbody>
+            </table>
+            <div id="vocabularyPagination" class="pagination"></div>
+        </div>
+        <div id="flashcards-page" style="display: none;">
+            <h2>Flashcard Learning</h2>
+            <div class="management-header">
+                <select id="flashcardCategory" onchange="loadFlashcards()" class="category-select">
+                    <option value="">ALL Categories</option>
+                </select>
+            </div>
+            <div id="flashcardContainer" class="flashcard-container">
+                <div id="flashcard" class="flashcard">No words available</div>
+                <div class="flashcard-buttons">
+                    <button id="prevFlashcard" onclick="prevFlashcard()" disabled>Previous</button>
+                    <button id="markLearned" onclick="markAsLearned()" disabled>Mark as Learned</button>
+                    <button id="nextFlashcard" onclick="nextFlashcard()" disabled>Next</button>
+                </div>
+                <div class="flashcard-progress">
+                    <span>Progress: <span id="flashcardProgress">0/0</span></span>
+                </div>
+            </div>
+            <div class="word-list">
+                <h3>Word List</h3>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>WORD</th>
+                            <th>MEANING</th>
+                            <th>STATUS</th>
+                        </tr>
+                    </thead>
+                    <tbody id="flashcardWordList"></tbody>
+                </table>
+            </div>
+        </div>
+        <div id="categoryPopup" class="popup">
+            <div class="popup-content">
+                <h3 id="categoryPopupTitle">Thêm Danh Mục</h3>
+                <button onclick="closeCategoryPopup()" class="popup-close">×</button>
+                <label for="categoryName">Tên Danh Mục</label>
+                <input type="text" id="categoryName" placeholder="Nhập tên danh mục" class="popup-input" />
+                <label for="categoryDescription">Mô Tả</label>
+                <textarea id="categoryDescription" placeholder="Nhập mô tả" class="popup-textarea"></textarea>
+                <div class="popup-actions">
+                    <button onclick="closeCategoryPopup()" class="btn btn-cancel">Hủy</button>
+                    <button onclick="saveCategory()" class="btn btn-save">Lưu</button>
+                </div>
+            </div>
+        </div>
+        <div id="categoryDeletePopup" class="popup">
+            <div class="popup-content">
+                <h3>Xóa Danh Mục</h3>
+                <button onclick="closeCategoryDeletePopup()" class="popup-close">×</button>
+                <p>Bạn có chắc chắn muốn xóa danh mục này?</p>
+                <div class="popup-actions">
+                    <button onclick="closeCategoryDeletePopup()" class="btn btn-cancel">Hủy</button>
+                    <button onclick="confirmCategoryDelete()" class="btn btn-delete">Xóa</button>
+                </div>
+            </div>
+        </div>
+        <div id="vocabularyPopup" class="popup">
+            <div class="popup-content">
+                <h3 id="vocabularyPopupTitle">Thêm Từ Vựng</h3>
+                <button onclick="closeVocabularyPopup()" class="popup-close">×</button>
+                <label for="vocabWord">Từ</label>
+                <input type="text" id="vocabWord" placeholder="Nhập từ vựng" class="popup-input" />
+                <label for="vocabMeaning">Nghĩa</label>
+                <input type="text" id="vocabMeaning" placeholder="Nhập nghĩa" class="popup-input" />
+                <label for="vocabCategory">Chủ đề</label>
+                <input type="text" id="vocabCategory" placeholder="Nhập chủ đề" class="popup-input" />
+                <div class="popup-actions">
+                    <button onclick="closeVocabularyPopup()" class="btn btn-cancel">Hủy</button>
+                    <button onclick="saveVocabulary()" class="btn btn-save">Lưu</button>
+                </div>
+            </div>
+        </div>
+        <div id="vocabularyDeletePopup" class="popup">
+            <div class="popup-content">
+                <h3>Xóa Từ Vựng</h3>
+                <button onclick="closeVocabularyDeletePopup()" class="popup-close">×</button>
+                <p>Bạn có chắc chắn muốn xóa từ vựng này?</p>
+                <div class="popup-actions">
+                    <button onclick="closeVocabularyDeletePopup()" class="btn btn-cancel">Hủy</button>
+                    <button onclick="confirmVocabularyDelete()" class="btn btn-delete">Xóa</button>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer>
+        <p>© 2024 VocabApp. All rights reserved. Powered by AI.</p>
+    </footer>
+    <script src="js/auth.js"></script>
+    <script src="js/category.js"></script>
+    <script src="js/vocabulary.js"></script>
+    
+</body>
+
+</html>
