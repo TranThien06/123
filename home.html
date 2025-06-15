@@ -83,7 +83,20 @@
             <h2>Flashcard Learning</h2>
             <div class="management-header">
                 <select id="flashcardCategory" onchange="loadFlashcards()" class="category-select">
-                    <option value="">ALL Categories</option>
+                    <option value="">All Categories</option>
+                </select>
+                <div class="search-container">
+                    <input type="text" id="searchWord" placeholder="Search words..." class="search-input"
+                        oninput="loadFlashcards()" />
+                </div>
+                <select id="sortWord" onchange="loadFlashcards()" class="category-select">
+                    <option value="name">Sort by Name</option>
+                    <option value="created">Sort by Created Time</option>
+                </select>
+                <select id="filterStatus" onchange="loadFlashcards()" class="category-select">
+                    <option value="all">All Status</option>
+                    <option value="learned">Learned</option>
+                    <option value="not-learned">Not Learned</option>
                 </select>
             </div>
             <div id="flashcardContainer" class="flashcard-container">
@@ -102,13 +115,37 @@
                 <table class="data-table">
                     <thead>
                         <tr>
-                            <th>WORD</th>
-                            <th>MEANING</th>
-                            <th>STATUS</th>
+                            <th>Word</th>
+                            <th>Meaning</th>
+                            <th>Status</th>
                         </tr>
                     </thead>
                     <tbody id="flashcardWordList"></tbody>
                 </table>
+                <div id="wordListPagination" class="pagination"></div>
+            </div>
+        </div>
+        <div id="quiz-page" style="display: none;">
+            <h2>Quiz</h2>
+            <div class="management-header">
+                <select id="quizCategory" onchange="startQuiz()" class="category-select">
+                    <option value="">All Categories</option>
+                </select>
+            </div>
+            <div id="quizContainer" class="quiz-container">
+                <div class="progress-bar">
+                    <div id="progress" class="progress"></div>
+                </div>
+                <div id="quizProgress">0/0</div>
+                <div id="question" class="question"></div>
+                <div id="answers" class="answers"></div>
+                <div id="inputAnswer" class="input-answer" style="display: none;">
+                    <input type="text" id="textAnswer" placeholder="Enter the word..." class="search-input" />
+                    <button onclick="checkTextAnswer()" class="btn btn-submit blue">Submit</button>
+                </div>
+                <div id="feedback" class="feedback"></div>
+                <button id="nextQuestion" onclick="nextQuestion()" class="btn btn-submit blue"
+                    style="display: none;">Next</button>
             </div>
         </div>
         <div id="categoryPopup" class="popup">
@@ -119,10 +156,12 @@
                 <input type="text" id="categoryName" placeholder="Nhập tên danh mục" class="popup-input" />
                 <label for="categoryDescription">Mô Tả</label>
                 <textarea id="categoryDescription" placeholder="Nhập mô tả" class="popup-textarea"></textarea>
+               
                 <div class="popup-actions">
                     <button onclick="closeCategoryPopup()" class="btn btn-cancel">Hủy</button>
                     <button onclick="saveCategory()" class="btn btn-save">Lưu</button>
                 </div>
+                
             </div>
         </div>
         <div id="categoryDeletePopup" class="popup">
@@ -145,7 +184,9 @@
                 <label for="vocabMeaning">Nghĩa</label>
                 <input type="text" id="vocabMeaning" placeholder="Nhập nghĩa" class="popup-input" />
                 <label for="vocabCategory">Chủ đề</label>
-                <input type="text" id="vocabCategory" placeholder="Nhập chủ đề" class="popup-input" />
+                <select id="vocabCategory" class="popup-input">
+                    <option value="">-- Chọn Chủ Đề --</option>
+                </select>
                 <div class="popup-actions">
                     <button onclick="closeVocabularyPopup()" class="btn btn-cancel">Hủy</button>
                     <button onclick="saveVocabulary()" class="btn btn-save">Lưu</button>
@@ -170,7 +211,8 @@
     <script src="js/auth.js"></script>
     <script src="js/category.js"></script>
     <script src="js/vocabulary.js"></script>
-    
+    <script src="js/flashcard.js"></script>
+    <script src="js/quiz.js"></script>
 </body>
 
 </html>
