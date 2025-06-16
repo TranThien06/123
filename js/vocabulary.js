@@ -2,7 +2,7 @@
     let currentVocabPage = 1;
     const vocabItemsPerPage = 5;
 
-    function renderVocabularies() { // Lọc và phân trang danh sách từ vựng
+    function renderVocabularies() { 
         const searchTerm = document.getElementById('searchVocabulary').value.toLowerCase();  
         const filteredVocabularies = vocabularies.filter(vocab =>
             vocab.word.toLowerCase().includes(searchTerm) ||

@@ -1,3 +1,4 @@
+// điều hướng và hiển thị trang tương ứng
 function showPage(page) {
     document.getElementById('home-page').style.display = 'none'; 
     document.getElementById('category-page').style.display = 'none';
@@ -9,7 +10,7 @@ function showPage(page) {
     document.querySelector(".btn-register").style.display = 'none';
     document.querySelector(".btn-logout").style.display = 'inline-block';
 
-    if (page === 'category') { // hiển thị trang danh mục
+    if (page === 'category') { 
         document.getElementById('category-page').style.display = 'block'; 
         renderCategories();
     } else if (page === 'vocabulary') {
@@ -33,7 +34,7 @@ function showPage(page) {
         document.getElementById('home-page').style.display = 'block';
     }
 }
-
+// hiển thị hoặc ẩn các biểu mẫu và trang, điểu chỉnh hiển thị các nút điều hướng
 function showForm(type) { 
     const loginForm = document.getElementById("login-form");
     const registerForm = document.getElementById("register-form");
@@ -55,11 +56,11 @@ function showForm(type) {
     document.querySelector(".btn-register").style.display = type === 'login' || type === 'register' ? 'inline-block' : 'none';
     document.querySelector(".btn-logout").style.display = type === 'home' || type === 'category' || type === 'vocabulary' || type === 'flashcards' || type === 'quiz' ? 'inline-block' : 'none'; // hiển thị nút đăng xuất
 }
-
+// Khởi tạo ứng dụng khi trang được tải, kiểm tra trạng thái đăng nhập và thiết lập sự kiện điều hướng.
 window.onload = function () {
     const loggedInUser = localStorage.getItem("loggedInUser"); 
     const currentPath = window.location.pathname;
-    if (loggedInUser) { // kiểm tra xem người dùng đã đăng nhập hay chưa
+    if (loggedInUser) { 
         if (currentPath.includes('index.html') || currentPath.includes('register.html')) {
             window.location.href = 'home.html';
         } else if (currentPath.includes('home.html')) {
@@ -83,8 +84,8 @@ window.onload = function () {
         });
     });
 };
-
-function validateRegisterForm() { // xử lí kiểm tra và đăng ký tài khoản 
+// Xác thực và xử lý đăng ký tài khoản mới.
+function validateRegisterForm() { 
     const firstName = document.getElementById("firstName").value.trim();
     const lastName = document.getElementById("lastName").value.trim();
     const email = document.getElementById("email").value.trim();
@@ -150,7 +151,7 @@ function validateRegisterForm() { // xử lí kiểm tra và đăng ký tài kho
 
     return false;
 }
-
+// Xác thực và xử lý đăng nhập.
 function validateLoginForm() {
     const email = document.getElementById("loginEmail").value.trim();
     const password = document.getElementById("loginPassword").value;
@@ -197,7 +198,7 @@ function validateLoginForm() {
 
     return false;
 }
-
+// Xử lý đăng xuất.
 function logout() {
     Swal.fire({
         title: 'Xác nhận',
